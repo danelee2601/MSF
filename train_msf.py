@@ -158,6 +158,10 @@ class MeanShift(nn.Module):
         self.queue_ptr[0] = ptr
 
     def forward(self, im_q, im_t, labels):
+        """
+        im_q: image_query (by online network)
+        im_t: image_target (by target network)
+        """
         # compute query features
         feat_q = self.encoder_q(im_q)
         # compute predictions for instance level regression loss
@@ -170,6 +174,7 @@ class MeanShift(nn.Module):
             self._momentum_update_target_encoder()
 
             # shuffle targets
+            # generate shuffle ids for ShuffleBN"
             shuffle_ids, reverse_ids = get_shuffle_ids(im_t.shape[0])
             im_t = im_t[shuffle_ids]
 
